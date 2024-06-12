@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+
+  <title>HeritageRoots: Graph Search</title>
+
+  <!--script src="https://d3js.org/d3.v4.min.js"></script-->
+  <script src="{{url_for('static',filename='d3.v4.min.js')}}"></script>
+</head>
+<body>
+<header>
+    {% 
+     include 'header.html'
+    %}
+</header>
+<script>
+  var embedded = getrequest('embedded');
+</script>
+<main>
+  <div class="row align-items-start">
+    <div class="top-spacer"></div>
+  </div>
+  <div class="row align-items-start">
+    <div class="form-title"><h2>Graph Search</h2></div>
+  </div>
+  <div class="row align-items-start">
+    <div class="col-2">
+      <div class="form-container-small">
+        <table class="form-org-table">
+          <tr>
+            <td>Target:</td>
+            <td>
+              <select id="ddlSearchTarget" name="ddlSearchTarget" class="form-field-small" onchange="show_hide_scope();">
+                <option name="Animals" value="animals">Animals</option>
+                <!--option name="Events" value="events">Events</option-->
+                <!--option name="ID" value="id">Unique Identifier (ID)</option-->
+                <option name="Narratives" value="narratives">Narratives</option>
+                <option name="Objects" value="objects">Objects</option>
+                <option name="Plants" value="plants">Plants</option>
+              </select>
+            </td>
+          </tr>
+          <tr id="scopeRow" style="display: none;">
+            <td>Scope:</td>
+            <td>
+              <select id="ddlSearchScope" name="ddlSearchScope" class="form-field-small">
+                <option name="name" value="name">Name</option>
+                <option name="genus" value="genus">Genus</option>
+                <option name="family" value="family">Family</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td>Keyword(s):</td>
+            <td><input type="text" name="txtSearch" id="txtSearch" value="" class="form-field-small" /></td>
+          </tr>
+          <tr>
+            <td colspan="2" class="form-buttons"><input class="form-button-small" type="button" name="btnSearch" id="btnSearch" value="Search" onclick="searchgraph();" /></td>
+          </tr>
+        
+        </table>
+      </div>
+    </div>
+    <div class="col-7">
+        <svg width="900" height="600" id="svgGraph"></svg>
+    </div>
+    <div class="col-3">
+      <table id="graphlegend" class="graphlegend"></table>
+      <table id="graphnodedetails" class="graphlegend"></table>
+    </div>
+  </div>
+</main>
+</body>
+
+
+<script>
+
+var svg = d3.select("svg");
+var width = +900;
+var height = +600;
+
+var color = d3.scaleOrdinal(d3.schemeCategory20);
+
+var simulation = d3.forceSimulation()
+    .force("link", d3.forceLink().id(function(d) { return d.id; }))
+    .force("charge", d3.forceManyBody())
+    .force("center", d3.forceCenter(width / 2, height / 2));
+
+function rendergraph(target, scope, keywords){
+
+  embedded = getrequest('embedded');
+
+  if(embedded == "yes"){
+    $('#searchbar').css({'display': 'none'});
+    width = +600;
+    height = +300;
+  }
+  else{
+    $('#searchbar').css({'display': 'block'});
+    width = +900;
+    height = +600;
+  }
+
+  
+  simulation = d3.forceSimulation()
+    .force("link", d3.forceLink().id(function(d) { return d.id; }))
+    .force("charge", d3.forceManyBody())
+    .force("center", d3.forceCenter(width / 2, height / 2));
+  
+
+
+  var nodecolors = {};
+  $('#svgGraph').empty();
+  $('#graphlegend').empty();
+  var searchurl = "search_entities?target=" + target + "&scope=" + scope + "&searchterms=" + keywords
+  // searchurl = "relationships_search";
+  // console.log(searchurl)
+  d3.json(searchurl, function(error, graph) {
+    
+    // console.log(graph);
+    if (error) throw error;
+    // console.log(graph);
+    var link = svg.append("g")
+      .attr("class", "links")
+      .selectAll("line")
+      .data(graph.links)
+      .enter().append("line")
+        .attr("stroke-width", function(d) { return Math.sqrt(d.value); });
+    
+    var node = svg.append("g")
+      .attr("class", "nodes")
+      .selectAll("circle")
+      .data(graph.nodes)
+      .enter().append("circle")
+        .attr("r", 10)
+        .attr("fill", function(d) { 
+          nodecolors[d.group] = color(d.group);
+          return color(d.group); 
+        })
+      .call(d3.drag()
+        .on("start", dragstarted)
+        .on("drag", dragged)
+        .on("end", dragended));
+    // console.log(nodecolors);
+    node.append("svg:title")
+      .attr("dx", 12)
+      .attr("dy", ".35em")
+      .text(function(d) { return tooltip(d); });
+    
+    /*
+    node.append("svg:text")
+    .attr("dx", 12)
+    .attr("dy", ".35em")
+    .text("HELLO");
+    */
+    /*
+    node.append("svg:image")
+      .attr("src", "{{ url_for('static',filename='images/animal-mammal-icon-small.png') }}")
+      .attr("x", -8)
+      .attr("y", -8)
+      .attr("width", 16)
+      .attr("height", 16);
+      */
+    
+    node.on("dblclick", function(d) {
+      node_dblclicked(d);
+      d3.event.stopPropagation();
+    });
+
+    node.on("click", function(d){
+      node_clicked(d);
+      d3.event.stopPropagation();
+    });
+
+    simulation
+        .nodes(graph.nodes)
+        .on("tick", ticked);
+
+    simulation.force("link")
+        .links(graph.links);
+
+    creategraphlegend(nodecolors);
+
+    function ticked() {
+      link
+          .attr("x1", function(d) { return d.source.x; })
+          .attr("y1", function(d) { return d.source.y; })
+          .attr("x2", function(d) { return d.target.x; })
+          .attr("y2", function(d) { return d.target.y; });
+
+      node
+          .attr("cx", function(d) { return d.x; })
+          .attr("cy", function(d) { return d.y; });
+    }
+  });
+}
+
+function node_dblclicked(d){
+  var group = d['group'].toLowerCase();
+  if(group == "narrative"){
+    // document.location.href="link_concepts?story_id=" + d['id'];
+    document.location.href="view_entity?entity_id=" + d['id'] + "&entity_label=Narrative&browse_target=narratives";
+  }
+  else if (group.includes("animal")){
+    // document.location.href="update_animal_entry?animal_id=" + d['id'];
+    document.location.href="view_entity?entity_id=" + d['id'] + "&entity_label=Animal&browse_target=animals";
+  }
+  else if (group.includes("plant")){
+    // document.location.href="update_plant_entry?plant_id=" + d['id'];
+    document.location.href="view_entity?entity_id=" + d['id'] + "&entity_label=Plant&browse_target=plants";
+  }
+  else if (group.includes("object")){
+    // document.location.href="update_object_entry?object_id=" + d['id'];
+    document.location.href="view_entity?entity_id=" + d['id'] + "&entity_label=Object&browse_target=objects";
+  }
+}
+
+function node_clicked(d){
+  // console.log(d);
+  $tbl = $('#graphnodedetails');
+  $tbl.empty();
+  const exclude = ['x', 'y', 'vx', 'vy', 'fx', 'fy', 'index', 'id', 'server_path']
+  Object.keys(d).forEach(key => {
+    const value = d[key];
+    if(!exclude.includes(key.toLowerCase())){
+      $tr = $('<tr></tr>');
+      
+      $td = $('<td></td>');
+      $td.text(capitalize(key));
+      $tr.append($td);
+
+      $td = $('<td></td>');
+      $td.text(value.substring(0, 200));
+      $tr.append($td);
+
+      $tbl.append($tr);
+    }
+    // console.log(`Key: ${key}, Value: ${value}`);
+  });
+}
+
+function dragstarted(d) {
+  if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+  d.fx = d.x;
+  d.fy = d.y;
+}
+
+function dragged(d) {
+  d.fx = d3.event.x;
+  d.fy = d3.event.y;
+}
+
+function dragended(d) {
+  if (!d3.event.active) simulation.alphaTarget(0);
+  d.fx = null;
+  d.fy = null;
+}
+
+function tooltip(d){
+  msg = ""
+  for (const key in d) {
+    if (d.hasOwnProperty(key)) {
+      // console.log(`${key}: ${user[key]}`);
+      msg += capitalize(key) + ": " + d[key] + "\n";
+    }
+  }
+  return msg; //JSON.stringify(d);
+}
+
+
+
+function searchgraph(){
+  $search_target = $('#ddlSearchTarget');
+  $search_scope = $('#ddlSearchScope');
+  $search_terms = $('#txtSearch');
+
+  target = $search_target.find(":selected").val();
+  scope = $search_scope.find(":selected").val();
+  keywords = $search_terms.val();
+  // console.log(keywords);
+  rendergraph(target, scope, keywords);
+}
+
+function creategraphlegend(nodecolors){
+  
+  for (const [key, value] of Object.entries(nodecolors)) {
+    
+      $tr = $('<tr></tr>');
+      $td = $('<td></td>');
+      $td.html("&nbsp;&nbsp;&nbsp;")
+      $td.css('background',value);
+      $tr.append($td);
+
+      $td = $('<td></td>');
+      $td.text(key);
+      $tr.append($td);
+      
+      $('#graphlegend').append($tr);
+    } 
+  
+}
+
+$(document).ready(function(){
+  embedded = getrequest("embedded");
+  if(embedded == "yes"){
+    $('header').css({"display" : "none"});
+  }
+  $search_target = $('#ddlSearchTarget');
+  $search_scope = $('#ddlSearchScope');
+  $search_terms = $('#txtSearch');
+
+  entity_id = getrequest('entity_id');
+  target = getrequest('target');
+  scope = getrequest('scope');
+  keywords = getrequest('keywords');
+  
+  
+
+  if(entity_id != ""){
+    console.log(entity_id);
+    target = "id";
+    scope = "";
+    keywords = entity_id;
+    rendergraph(target, scope, keywords);
+  }
+  else if (target!= "" && keywords != ""){
+    $search_target.val(target.toLowerCase());
+    if(scope == ""){
+      scope = "name";
+    }
+    $search_scope.val(scope.toLowerCase());
+    $search_terms.val(keywords.toLowerCase());
+    rendergraph(target, scope, keywords);
+  }
+
+  
+});
+
+function show_hide_scope(){
+  /*
+  var selectedTarget = $('#ddlSearchTarget').val();
+  
+  if(selectedTarget == "plants" || selectedTarget == "animals"){
+    $('#scopeRow').css({
+      "visibility" : "visible"
+    });
+  }
+  else{
+    $('#scopeRow').css({
+      "visibility" : "hidden"
+    });
+  }
+  */
+}
+
+</script>
+</html>

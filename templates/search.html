@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>HeritageRoots: Search</title>
+    
+</head>
+
+<body>
+    <header>
+        {% include 'header.html' %}
+    </header>
+
+    <main>
+        <div id="home" class="landing">
+            <div class="row align-items-start">
+                <div class="top-spacer"></div>
+            </div>
+            <div class="row align-items-start">
+                <div class="col-2"></div>
+                <div class="col-8">
+                    <div class="form-container">
+                        <table width="100%">
+                            <tr>
+                                <td><img src="{{ url_for('static',filename='images/network.png') }}" class="search_icon" /></td>
+                                <td><a href="graph">Graph/Network Search</a></td>
+                                <td>Your search results will be displayed as an interactive network graph - see how everything is connected to everything else! <b>Click</b> on a node to preview the node's content, or <b>double-click</b> on a node to view all details. </td>
+                            </tr>
+                            <tr>
+                                <td><img src="{{ url_for('static',filename='images/table-icon.png') }}" class="search_icon" /></td>
+                                <td><a href="browse">Text Search</a></td>
+                                <td>Your search results will be displayed as a table.</td>
+                            </tr>
+                            <tr>
+                                <td><img src="{{ url_for('static',filename='images/sankey.png') }}" class="search_icon" /></td>
+                                <td><a href="relationships">Explore Pairwise Relationships</a></td>
+                                <td>
+                                    This search will allow you to explore pairwise relationships between different types 
+                                    of objects represented in <i>HeritageRoots</i>. For example, you can explore relationships 
+                                    between narratives and animals, narratives and objects, animals and plants, etc. 
+                                    <i>This feature is in BETA.</i>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><img src="{{ url_for('static',filename='images/search_events.png') }}" class="search_icon" /></td>
+                                <td><a href="search_events">Search Observed Events</a></td>
+                                <td>
+                                    This feature is in beta.  Events are observations recorded by 
+                                    researchers about animals and plants in regions described in indigenous narratives.
+                                </td>
+                            </tr>
+                        </ul>
+                    </div> 
+                </div>
+                
+                <div class="col-2"></div>
+            </div>
+        </div>
+    </main>
+
+</body>   
+
+</html>

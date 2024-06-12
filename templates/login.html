@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>HeritageRoots: Login</title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='bootstrap.min.css') }}">
+    <!--script defer src="app.js"></script-->
+</head>
+
+<body>
+    <header>
+        {% include 'header.html' %}
+    </header>
+
+    <main>
+        <div id="home" class="landing">
+            <div class="row align-items-start">
+                <div class="top-spacer"></div>
+            </div>
+            <div class="row align-items-start">
+                <div class="col-3"></div>
+                <div class="col-6">
+                    <div class="form-container">
+                        <form action="validate_login" method="POST">   
+                            <div>
+                                <p class="form-label-text">Email:</p>
+                                <input class="form-field" type="text" name="txt_email" id="txt_email" value="" />
+                                <p></p>
+                                <p class="form-label-text">Password:</p>
+                                <input class="form-field" type="password" name="txt_password" id="txt_password" value="" /> 
+                            </div>
+                            <div><br /></div>
+                            <div class="form-buttons">
+                                <input class="form-button" type="submit" name="btn_login" id="btn_login" value="Login" />   
+                                <input class="form-button" type="button" name="btn_cancel" id="btn_cancel" value="Cancel" />   
+                            </div>
+                        </form>
+                    </div> 
+                </div>
+                <div class="col-3"></div>
+            </div>
+        </div>
+    </main>
+
+</body>   
+
+</html>

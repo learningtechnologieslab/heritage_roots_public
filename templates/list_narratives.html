@@ -1,0 +1,106 @@
+<html>   
+<head>   
+    <title>HeritageRoots: Search Narratives</title>   
+</head>   
+<body>   
+    <header>
+        {% include 'header.html' %}
+    </header>
+
+    <main>
+        <div id="home" class="landing">
+            <div class="row align-items-start">
+                <div class="top-spacer"></div>
+            </div>
+            <div class="row align-items-start">
+                <div class="col-2">&nbsp;</div>
+                <div class="col-8">
+                    <div class="form-container">
+                        <form action = "get_narratives" method = "get" onkeydown="if(event.keyCode === 13) { return false; }">   
+                            <div>
+                                <input class="form-field-small" type="text" name="searchterm" id="searchterm" value="" />
+                                <input class="form-button-small" type="button" name="search" id="search" value="Search"  onclick="list_narratives();"/>
+                            </div>
+                            <div><br /></div>
+                            <div>
+                                <table id="narrative_list" class="list_table">
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Text</th>
+                                        <th>Presenter</th>
+                                        <th>Translator</th>
+                                        <th>Country</th>
+                                        <th>Language</th>
+                                        <th>[edit]</th>
+                                    </tr>
+                                </table>
+                            </div>
+                            
+                        </form>   
+                    </div>
+                </div>
+                <div class="col-2">&nbsp;</div>
+            </div>
+        </div>  
+    </main>
+</body>   
+<script>
+    
+    function list_narratives(){
+        var searchterm = $('#searchterm').val();
+        var url = "get_narratives?searchterm=" + searchterm;
+        $.getJSON(url, function(data){
+            console.log(data);
+            var $tbl = $("#narrative_list");
+            data.sort((a, b) => {
+                if (a.title < b.title) {
+                    return -1;
+                }
+            });
+            // console.log(data);
+            for(var i = 0; i<data.length; i++){
+                $tr = $('<tr></tr>');
+                
+                $td = $('<td></td>');
+                $td.text(data[i]['title']);
+                $tr.append($td);
+
+                $td = $('<td></td>');
+                $td.text(data[i]['text'].substring(0, 100));
+                $tr.append($td);
+
+                $td = $('<td></td>');
+                $td.text(data[i]['presenter']);
+                $tr.append($td);
+
+                $td = $('<td></td>');
+                $td.text(data[i]['translator']);
+                $tr.append($td);
+
+                $td = $('<td></td>');
+                $td.text(data[i]['country']);
+                $tr.append($td);
+
+                $td = $('<td></td>');
+                $td.text(data[i]['trans_language']);
+                $tr.append($td);
+
+                $td = $('<td></td>');
+                $a = $('<a></a>');
+                var url = "link_concepts?story_id=" + data[i]['id']
+                $a.attr({
+                    "href" : url
+                });
+                
+                $a.text("[edit]")
+                $td.append($a);
+                $tr.append($td);
+
+                $tbl.append($tr);
+            }
+        });
+    }
+
+    
+</script>
+</html>

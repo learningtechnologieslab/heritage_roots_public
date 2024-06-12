@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>HeritageRoots: Import Events</title>
+    
+</head>
+
+<body>
+    <header>
+        {% include 'header.html' %}
+    </header>
+
+    <main>
+        <div id="home" class="landing">
+            <div class="row align-items-start">
+                <div class="top-spacer"></div>
+            </div>
+            <div class="row align-items-start">
+                <div class="col-2"></div>
+                <div class="col-8">
+                    <div class="form-container">  
+                        <form action = "upload_events_file" method = "post" enctype="multipart/form-data">   
+                            <div class="form-title">Upload Events</div>
+                            <br />
+                            <div class="form-label-text">
+                                Please upload a list of observed events in either Microsoft Excel
+                                or Comma-Separated Values (.csv) file format.  The uploaded spreadsheet must,
+                                at minimum, contain the following columns:
+                                <ul>
+                                    <li>kingdom</li>
+                                    <li>phylum</li>
+                                    <li>class</li>
+                                    <li>order</li>
+                                    <li>family</li>
+                                    <li>genus</li>
+                                    <li>species</li>
+                                </ul>
+                                You many have any number of additional columns in the spreadsheet, but the columns 
+                                above must be present in order for <i>HeritageRoots</i> to import and link events correctly.
+                                Note that column names are case-sensitive.
+                            <div>
+                            <br />
+                            <div>
+                                <input type="file" name="file" class="form-field" /> 
+                            </div>
+                            <br />
+                            
+                            <div>
+                                <input type = "submit" value="Upload and Save" class="form-button-small">   
+                            </div>
+                        </form>  
+                    </div> 
+                </div>
+            </div>
+        </div>
+    </main>
+</body>   
+</html>

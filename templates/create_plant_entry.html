@@ -1,0 +1,125 @@
+<html>   
+<head>   
+    <title>HeritageRoots: Create Plant</title>   
+    
+</head>   
+<body>   
+    <header>
+        {% include 'header.html' %}
+    </header>
+
+    <main>
+        <div id="home" class="landing">
+            <div class="row align-items-start">
+                <div class="top-spacer"></div>
+            </div>
+            <div class="row align-items-start">
+                <div class="col-3">&nbsp;</div>
+                <div class="col-6">
+                    <div class="form-container">
+                        <form action="create_living_object_taxonomy" method="POST">   
+                            <input type="hidden" name="entity_id" id="entity_id" value="" />
+                            <input type="hidden" name="entity_label" id="entity_label" value="Plant" />
+                            <table class="form-org-table">
+                                <tr>
+                                    <td colspan="3" class="form-title">Create New Plant Entry</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" class="divider-container"></td>
+                                </tr>
+                                <tr>
+                                    <td class="form-label-text">Search:</td>
+                                    <td><input class="form-field-small" type="text" name="search_gbif" id="search_gbif" value="" /></td>
+                                    <td><input class="form-button-small" type="button" name="btn_search_api" id="btn_search_api" value="Search"  onclick="search_gbif_api();" /></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" class="divider-container"><img class="divider-simple" src="{{url_for('static', filename='images/divider-simple.png')}}"></td>
+                                </tr>
+                                <tr>
+                                    <td class="form-label-text">Common Name:</td>
+                                    <td colspan="2"><input class="form-button-small" type="text" name="txt_common_name" id="txt_common_name" value="" style="width: 500px;" /></td>
+                                </tr>
+                                <tr>
+                                    <td class="form-label-text">Generalized Concept (e.g., a snail or a dog):</td>
+                                    <td colspan="2">
+                                        <select class="form-field-small" name="ddl_generalized" id="ddl_generalized">
+                                            <option value="no">No</option>
+                                            <option value="yes">Yes</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="form-label-text">Kingdom:</td>
+                                    <td colspan="2"><input class="form-button-small" type="text" name="txt_kingdom" id="txt_kingdom" value="" style="width: 500px;" /></td>
+                                </tr>
+                                <tr>
+                                    <td class="form-label-text">Phylum:</td>
+                                    <td colspan="2"><input class="form-button-small" type="text" name="txt_phylum" id="txt_phylum" value="" style="width: 500px;" /></td>
+                                </tr>
+                                <tr>
+                                    <td class="form-label-text">Class:</td>
+                                    <td colspan="2"><input class="form-button-small" type="text" name="txt_class" id="txt_class" value="" style="width: 500px;" /></td>
+                                </tr>
+                                <tr>
+                                    <td class="form-label-text">Order:</td>
+                                    <td colspan="2"><input class="form-button-small" type="text" name="txt_order" id="txt_order" value="" style="width: 500px;" /></td>
+                                </tr>
+                                <tr>
+                                    <td class="form-label-text">Family:</td>
+                                    <td colspan="2"><input class="form-button-small" type="text" name="txt_family" id="txt_family" value="" style="width: 500px;" /></td>
+                                </tr>
+                                <tr>
+                                    <td class="form-label-text">Genus:</td>
+                                    <td colspan="2"><input class="form-button-small" type="text" name="txt_genus" id="txt_genus" value="" style="width: 500px;" /></td>
+                                </tr>
+                                <tr>
+                                    <td class="form-label-text">Species:</td>
+                                    <td colspan="2"><input class="form-button-small" type="text" name="txt_species" id="txt_species" value="" style="width: 500px;" /></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" class="form-buttons">
+                                        <input class="form-button-small" type = "submit" name="btn_save" id="btn_save" value="Save">   
+                                        <input class="form-button-small" type = "button" name="btn_cancel" id="btn_cancel" value="Cancel" onclick="document.location.href='create';">
+                                    </td>
+                                </tr>
+
+                                
+                            </table>
+                        </form>  
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main> 
+</body>   
+<script>
+    $(document).ready(function(){
+        entity_id = getrequest('entity_id');
+        if(entity_id != ''){
+            // $('#entity_id') = entity_id;
+        }
+    });
+
+    function search_gbif_api(obj){
+        var searchterm = $('#search_gbif').val();
+        if(searchterm != ""){
+            var url = "search_bio_data?searchterm="+searchterm;
+            console.log(url); 
+            $.get(url, function(data){
+                // console.log(data);
+                if(data){
+                    for (const [key, value] of Object.entries(data)) {
+                        var obj_id = "#txt_" + key.toLowerCase();
+                        if($(obj_id).length > 0){
+                            // console.log(key + ": " + value);
+                            $(obj_id).val(value);
+                        }
+                        
+                    }
+                }
+            })
+        }
+        
+    }
+</script>
+</html>

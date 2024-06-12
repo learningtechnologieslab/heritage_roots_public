@@ -1,0 +1,87 @@
+<html>   
+<head>   
+    <title>HeritageRoots: Create Object</title>   
+   
+</head>   
+<body>   
+    <header>
+        {% include 'header.html' %}
+    </header>
+
+    <main>
+        <div id="home" class="landing">
+            <div class="row align-items-start">
+                <div class="top-spacer"></div>
+            </div>
+            <div class="row align-items-start">
+                <div class="col-3">&nbsp;</div>
+                <div class="col-6">
+                    <div class="form-container">
+                        <form action="create_object" method="POST">   
+                            <input type="hidden" name="entity_id" id="entity_id" value="" />
+                            <input type="hidden" name="entity_label" id="entity_label" value="Plant" />
+                            <table class="form-org-table">
+                                <tr>
+                                    <td colspan="3" class="form-title">Create New Object Entry</td>
+                                </tr>
+                                
+                                <tr>
+                                    <td class="form-label-text">Object Name:</td>
+                                    <td colspan="2"><input class="form-button-small" type="text" name="txt_object_name" id="txt_object_name" value="" style="width: 500px;" /></td>
+                                </tr>
+                                <tr>
+                                    <td class="form-label-text">Description:</td>
+                                    <td colspan="2"><textarea class="form-button-small" name="txt_description" id="txt_description" style="width: 500px; min-height: 200px;"></textarea></td>
+                                </tr>
+                                <tr>
+                                    <td class="form-label-text">Notes:</td>
+                                    <td colspan="2"><textarea class="form-button-small" name="txt_notes" id="txt_notes" style="width: 500px; min-height: 200px;"></textarea></td>
+                                </tr>
+                               
+                                <tr>
+                                    <td colspan="3" class="form-buttons">
+                                        <input class="form-button-small" type = "submit" name="btn_save" id="btn_save" value="Save">   
+                                        <input class="form-button-small" type = "button" name="btn_cancel" id="btn_cancel" value="Cancel" onclick="document.location.href='create';">
+                                    </td>
+                                </tr>
+
+                                
+                            </table>
+                        </form>  
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main> 
+</body>   
+<script>
+    $(document).ready(function(){
+        entity_id = getrequest('entity_id');
+        if(entity_id != ''){
+            // $('#entity_id') = entity_id;
+        }
+    });
+
+    function search_gbif_api(obj){
+        var searchterm = $('#search_gbif').val();
+        if(searchterm != ""){
+            var url = "search_bio_data?searchterm="+searchterm;
+            console.log(url); 
+            $.get(url, function(data){
+                // console.log(data);
+                if(data){
+                    for (const [key, value] of Object.entries(data)) {
+                        var obj_id = "#txt_" + key.toLowerCase();
+                        if($(obj_id).length > 0){
+                            // console.log(key + ": " + value);
+                            $(obj_id).val(value);
+                        }
+                        
+                    }
+                }
+            })
+        }
+        
+    }
+</script>
+</html>

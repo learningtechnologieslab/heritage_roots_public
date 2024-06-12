@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>HeritageRoots: Tools</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css"/>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+</head>
+
+<body>
+    <header>
+        {% include 'header.html' %}
+    </header>
+
+    <main>
+        <div id="home" class="landing">
+            <div class="row align-items-start">
+                <div class="top-spacer"></div>
+            </div>
+            <div class="row align-items-start">
+                <div class="col-1">
+                    
+                </div>
+                <div class="col-8">
+                    <div class="media-container media-hide" id="scanner">
+                        <h2>3D Scanning</h2>
+                        <model-viewer class="youtube_viewer" src="{{ url_for('static',filename='models/frog.glb') }}" ar ar-modes="webxr scene-viewer quick-look" camera-controls tone-mapping="commerce" shadow-intensity="1">
+                            <div class="progress-bar hide" slot="progress-bar">
+                                <div class="update-bar"></div>
+                            </div>
+                            
+                        </model-viewer>
+                    </div>
+                    <div class="media-container media-hide" id="unity">
+                        <h2>Unity3D Game Engine</h2>
+                        <img src="{{ url_for('static',filename='images/unity_screenshot.png') }}" class="youtube_viewer">
+                    </div>
+                    <div class="media-container media-hide" id="drone">
+                        <h2>Drone Photography, Video, and Photogrammetry</h2>
+                        <iframe class="youtube_viewer" src="https://www.youtube.com/embed/QjY3fFKbXR8?si=3LImQyqN40Mv6_6a" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    </div>
+                    <div class="media-container media-hide" id="gopro">
+                        <h2>360 Photo and Video</h2>
+                        <div id="panorama" class="youtube_viewer"></div>
+                        <script>
+                            pannellum.viewer('panorama', {
+                                "type": "equirectangular",
+                                "panorama": "{{url_for('static',filename='images/360sample.jpg')}}"
+                            });
+                        </script>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="tools-menu">
+                        <a href="javascript:show_hide_media('unity');"><img src="{{url_for('static',filename='images/unity3d_logo.png')}}" class="tool-img" /></a>
+                        <br /><br />
+                        <a href="javascript:show_hide_media('scanner');"><img src="{{url_for('static',filename='images/scanner_logo.png')}}" class="tool-img" /></a>
+                        <br /><br />
+                        <a href="javascript:show_hide_media('gopro');"><img src="{{url_for('static',filename='images/gopro_logo.png')}}" class="tool-img"  /></a>
+                        <br /><br />
+                        <a href="javascript:show_hide_media('drone');"><img src="{{url_for('static',filename='images/drone_logo.png')}}" class="tool-img" /></a>
+                        <br /><br />
+                    </div> 
+                </div>
+                <div class="col-1"></div>
+            </div>
+        </div>
+    </main>
+
+</body>   
+
+</html>
+
+<script>
+    function show_hide_media(show_id){
+        var media_blocks = ['scanner', 'unity', 'drone', 'gopro']
+        for(var i = 0; i<media_blocks.length; i++){
+            $('#'+media_blocks[i]).css({
+                "display" : "none"
+            });
+        }
+        $('#' + show_id).css({"display":"block"});
+    }
+
+    $(document).ready(function(){
+        show_hide_media('drone');
+    });
+</script>

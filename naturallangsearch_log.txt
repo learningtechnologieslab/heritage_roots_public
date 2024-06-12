@@ -1,0 +1,21 @@
+============================= LOG FILE =============================
+============================= DO NOT MODIFY =============================
+
+===============
+User Input: retrieve animals found in ecuador
+Generated Query: MATCH (animals)-[:FOUND_IN]->(ecuador) RETURN animals LIMIT 100
+
+===============
+
+===============
+User Input: return plants found in Ecuador
+Generated Query: MATCH (p:Plant)-[:FOUND_IN]->(Ecuador) RETURN p LIMIT 100
+
+===============
+
+===============
+User Input: find all animals that live in ecuador
+Generated Query: MATCH (a:Animal)-[:FOUND_IN]->(c:Country {name: "Ecuador"}) RETURN a
+
+===============
+
