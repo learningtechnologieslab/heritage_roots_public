@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <title>HeritageRoots: Browse</title>
+</head>
+<body>
+<header>
+    {% 
+     include 'header.html'
+    %}
+</header>
+
+<main>
+  <div class="row align-items-start">
+    <div class="top-spacer"></div>
+  </div>
+  <div class="row align-items-start">
+    <div class="col-3">
+      <div class="form-container-small">
+        <table class="form-org-table">
+          <tr>
+            <td>Browse:</td>
+            <td>
+              <select id="ddlBrowseTarget" name="ddlBrowseTarget" class="form-field-small">
+                <option name="Animals" value="animals">Animals</option>
+                <option name="Countries" value="countries">Countries</option>
+                <option name="Languages" value="languages">Languages</option>
+                <option name="Narratives" value="narratives">Narratives</option>
+                <option name="Objects" value="objects">Objects</option>
+                <option name="Plants" value="plants">Plants</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td>Starts With:</td>
+            <td>
+              <select id="ddlStartsWith" name="ddlStartsWith" class="form-field-small">
+                
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2" class="form-buttons"><input class="form-button-small" type="button" name="btnSearch" id="btnSearch" value="Browse" onclick="browse();" /></td>
+          </tr>
+        
+        </table>
+      </div>
+    </div>
+    <div class="col-8">
+        <table id="browse_results" class="list_table"></table>
+    </div>
+    
+  </div>
+</main>
+</body>
+
+
+<script>
+
+var label_map = {
+    "animals" : "Animal",
+    "countries" : "Country",
+    "languages" : "Language",
+    "narratives" : "Narrative",
+    "objects" : "Objects",
+    "plants" : "Plant"
+}
+
+$(document).ready(function(){
+    $target_control = $('#ddlStartsWith');
+    for(var i = 65; i<90; i++){
+        var char = String.fromCharCode(i);
+        $target_control.append($("<option />").val(char.toLocaleLowerCase()).text(char));
+    }
+    
+    
+});
+
+
+function list_results(data){
+
+    if(data){
+        if(data.length > 0){
+            
+            $tbl = $('#browse_results');
+            $tbl.empty();
+            $tr = $('<tr></tr>');
+            for (const [key, value] of Object.entries(data[0]['n'])) {
+                if(key != "id"){
+                    $th = $('<th></th>');
+                    $th.text(capitalize(key));
+                    $tr.append($th)
+                }
+            }
+            $th = $('<th></th>');
+            $th.text("Details");
+            $tr.append($th);
+            $tbl.append($tr)
+
+            for(var i = 0; i<data.length; i++){
+                $tr = $('<tr></tr>');
+                for (const [key, value] of Object.entries(data[i]['n'])) {
+                    if(key != "id"){
+                        $td = $('<td></td>');
+                        if(value == ""){
+                            $td.html("&nbsp;");
+                        }
+                        else{
+                            $td.text(value.substring(0, 200));
+                        }
+                        $tr.append($td)
+                    }
+                }
+                $td = $('<td></td>');
+                $a = $('<a></a>');
+                
+                var href = "view_entity?entity_id=" + data[i]['n']['id'] + "&entity_label=" + label_map[$('#ddlBrowseTarget').val()] + "&browse_target=" + $('#ddlBrowseTarget').val();;
+                $a.attr({
+                    "href" : href
+                });
+                $a.text("[details]");
+                $td.append($a);
+                $tr.append($td);
+                $tbl.append($tr)
+            }
+
+        }
+    }
+    
+}
+
+
+
+function browse(){
+  $browse_target = $('#ddlBrowseTarget');
+  $starts_with = $('#ddlStartsWith');
+  
+  browse_target = $browse_target.val();
+  starts_with = $starts_with.val();
+  
+
+  var searchurl = "browse_entities?browse_target=" + browse_target + "&starts_with=" + starts_with;
+  console.log(searchurl);
+  $.getJSON(searchurl, function(data){
+    //console.log(data);
+    list_results(data);
+  });
+  
+};
+</script>
+</html>

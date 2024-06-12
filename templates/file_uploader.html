@@ -1,0 +1,60 @@
+<html>   
+<head>   
+    <title>File uploader</title>   
+    <script
+        src="https://code.jquery.com/jquery-3.6.4.min.js"
+        integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8="
+        crossorigin="anonymous"></script>    
+    <script src="{{url_for('static',filename='utils.js')}}"></script>
+    <link rel="stylesheet" href="{{url_for('static',filename='main.css')}}">
+</head>   
+<body>   
+    <div  class="form-container-small">
+        <form action = "upload_file" method = "post" enctype="multipart/form-data">   
+            <div>
+                <input type="file" name="file" class="form-field" /> 
+                <input type="hidden" name="entity_id" value="" id="entity_id" />
+                <input type="hidden" name="entity_label" value="" id="entity_label" />
+            </div>
+            <br />
+            <div>
+                <label for="file_type" class="form-label-text">File Type:</label><br />
+                <select name="file_type" id="file_type" class="form-field">
+                    <option value="image">Image</option>
+                    <option value="360image">360 image</option>
+                    <option value="3dmodel">3D model</option>
+                    <option value="pdf">PDF</option>
+                    <option value="other_document">Other document</option>
+                </select>
+            </div>
+            <br />
+            <div>
+                <label for="description"  class="form-label-text">Description:</label><br />
+                <textarea name="description" id="description" rows="5" cols="50"  class="form-field"></textarea>  
+            </div>
+            <br />
+            <div>
+                <label for="notes" class="form-label-text">Notes:</label><br />
+                <textarea name="notes" id="notes" rows="5" cols="50"  class="form-field"></textarea>  
+                </div>
+            <div>
+            <br />
+            <div>
+                <input type = "submit" value="Upload and Save" class="form-button-small">   
+            </div>
+        </form>  
+    </div> 
+</body>   
+<script>
+    $(document).ready(function(){
+        entity_id = getrequest('entity_id');
+        entity_label = getrequest('entity_label');
+        if(entity_id != '' && entity_label != ''){
+            $('#entity_id').val(entity_id);
+            $('#entity_label').val(entity_label);
+        }
+    });
+
+    
+</script>
+</html>

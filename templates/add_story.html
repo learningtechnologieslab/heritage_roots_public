@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>HeritageRoots: Add New Narrative</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+    </head>
+    <body>
+        <header>
+            {% include 'header.html' %}
+        </header>
+    
+        <main>
+            <div id="home" class="landing">
+                <div class="row align-items-start">
+                    <div class="top-spacer"></div>
+                </div>
+                <div class="row align-items-start">
+                    <div class="col-1">&nbsp;</div>
+                    <div class="col-10">
+                        <div class="form-container">
+                            <form action="{{url_for('savenarrative')}}" method="post">
+                                <table class="form-org-table">
+                                    <tr>
+                                        <td colspan="2" class="form-title">Add New Narrative</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="form-label-text"><label for="story_title">Title:</label></td>
+                                        <td><input class="form-field" type="text" name="story_title" id="story_title" style="width: 900px;" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="form-label-text"><label for="story_text">Narrative:</label></td>
+                                        <td>
+                                            <textarea  class="form-field" id="story_text" name="story_text"  style="width: 900px;" ></textarea>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="form-label-text"><label for="author">Author:</label></td>
+                                        <td>
+                                            <input  class="form-field" type="text" id="author" name="author" style="width: 900px;" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="form-label-text"><label for="translator">Translator:</label></td>
+                                        <td><input  class="form-field" type="text" id="translator" name="translator" style="width: 900px;" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="form-label-text"><label for="presenter">Speaker/Presenter:</label></td>
+                                        <td><input  class="form-field" type="text" id="presenter" name="presenter" style="width: 900px;" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="form-label-text"><label for="date_recorded">Date Recorded:</label></td>
+                                        <td><input  class="form-field" type="text" id="date_recorded" name="date_recorded" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="form-label-text"><label for="orig_language">Original Language:</label></td>
+                                        <td>
+                                            <select id="orig_language" name="orig_language"  class="form-field">
+                                                <option value="">-Select Original Language -</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="form-label-text"><label for="trans_language">Translation Language:</label></td>
+                                        <td>
+                                            <select id="trans_language" name="trans_language"  class="form-field">
+                                                <option value="">- Select Translation Language -</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="form-label-text"><label for="country">Country:</label></td>
+                                        <td>
+                                            <select id="country" name="country"  class="form-field">
+                                                <option value="">- Select Country -</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" class="form-buttons">
+                                            <input type="submit" value="Submit" class="form-button-small" name="btn_submit" id="btn_submit" onclick="document.location.href='link_concepts';" />
+                                            <input type="button" value="Cancel"  class="form-button-small" name="btn_reset" id="btn_reset" onclick="document.location.href='create'"/>
+                                            
+                                        </td>
+                                    </tr>
+                                </table>
+                        </form>
+                    </div>
+                    <div class="col-1">&nbsp;</div>
+                </div>
+            </div>
+        </main>
+    </body>
+    <script>
+        $(document).ready(function(){
+            var target_controls = [$('#orig_language'), $('#trans_language')];
+            get_languages(target_controls);
+            get_countries([$("#country")]);
+        });
+    </script>
+</html>

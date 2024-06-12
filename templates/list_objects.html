@@ -1,0 +1,93 @@
+<html>   
+<head>   
+    <title>HeritageRoots: Search Objects</title>   
+    
+</head>   
+<body>   
+    <header>
+        {% include 'header.html' %}
+    </header>
+
+    <main>
+        <div id="home" class="landing">
+            <div class="row align-items-start">
+                <div class="top-spacer"></div>
+            </div>
+            <div class="row align-items-start">
+                <div class="col-3">&nbsp;</div>
+                <div class="col-6">
+                    <div class="form-container">
+                        <form action = "get_objects" method = "get">   
+                            <div>
+                                <input class="form-field-small" type="text" name="searchterm" id="searchterm" value="" />
+                                <input class="form-button-small" type="button" name="search" id="search" value="Search"  onclick="list_objects();"/>
+                            </div>
+                            <div><br /></div>
+                            <div>
+                                <table id="object_list" class="list_table">
+                                    <tr>
+                                        <th>Object name</th>
+                                        <th>Description</th>
+                                        <th>Notes</th>
+                                        <th>[edit]</th>
+                                    </tr>
+                                </table>
+                            </div>
+                            
+                        </form>   
+                    </div>
+                </div>
+                <div class="col-3">&nbsp;</div>
+            </div>
+        </div>
+    </main>
+</body>   
+<script>
+    $(document).ready(function(){
+        // list_plants();
+    });
+
+    function list_objects(){
+        var searchterm = $('#searchterm').val();
+
+        $.getJSON("get_objects?searchterm="+searchterm, function(data){
+            var $tbl = $("#object_list");
+            data.sort((a, b) => {
+                if (a.scientific_name < b.scientific_name) {
+                    return -1;
+                }
+            });
+            console.log(data);
+            for(var i = 0; i<data.length; i++){
+                $tr = $('<tr></tr>');
+                
+                $td = $('<td></td>');
+                $td.text(data[i]['object_name']);
+                $tr.append($td);
+
+                $td = $('<td></td>');
+                $td.text(data[i]['description']);
+                $tr.append($td);
+
+                $td = $('<td></td>');
+                $td.text(data[i]['notes']);
+                $tr.append($td);
+
+                $td = $('<td></td>');
+                $a = $('<a></a>');
+                var url = "update_object_entry?object_id=" + data[i]['id']
+                $a.attr({
+                    "href" : url
+                });
+                $a.text("[edit]")
+                $td.append($a);
+                $tr.append($td);
+
+                $tbl.append($tr);
+            }
+        });
+    }
+
+    
+</script>
+</html>

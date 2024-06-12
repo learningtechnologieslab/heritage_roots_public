@@ -1,0 +1,83 @@
+<html>   
+<head>   
+    <title>HeritageRoots: Create User</title>   
+    <script
+        src="https://code.jquery.com/jquery-3.6.4.min.js"
+        integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8="
+        crossorigin="anonymous"></script>    
+    <link rel="stylesheet" href="{{ url_for('static',filename='main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='bootstrap.min.css') }}">
+    <script src="{{url_for('static',filename='utils.js')}}"></script>
+    <script>
+        var entity_id = ""; 
+        var entity_label = "";
+    </script>
+</head>   
+<body>   
+    <div class="container">
+        <div class="row align-items-start">
+            <div class="col-4">
+                <form action="create_new_user" method="POST">   
+                    <input type="hidden" name="user_id" id="user_id" value="" />
+                    
+                    <div>
+                        <b>First Name:</b><br />
+                        <input type="text" name="txt_first_name" id="txt_first_name" value="" /><br />
+                        <b>Last Name:</b><br />
+                        <input type="text" name="txt_last_name" id="txt_last_name" value="" /><br />
+                        <b>Email:</b><br />
+                        <input type="text" name="txt_email" id="txt_email" value="" /><br />
+                        <b>Affiliation:</b><br />
+                        <input type="text" name="txt_affiliation" id="txt_affiliation" value="" /><br />
+                        <b>Date Created:</b><br />
+                        <input class="locked" readonly="true" type="text" name="txt_date_created" id="txt_date_created" value="" /><br />
+                        <div><br /></div>
+                        
+                        <b>Password:</b><br />
+                        <input type="password" name="txt_password" id="txt_password" value="" /><br />
+                        <b>Retype Password:</b><br />
+                        <input type="password" name="txt_repeat_password" id="txt_repeat_password" value="" /><br />
+                        
+                        <div><br /></div>
+                        <b>Role:</b><br />
+                        <table id="tbl_roles">
+                            <tr>
+                                <th>Admin</th>
+                                <th>Owner</th>
+                                <th>Editor</th>
+                                <th>Contributor</th>
+                                <th>Viewer</th>
+                            </tr>
+                            <tr>
+                                <th><input type="checkbox" id="chk_role_admin" name="chk_role_admin" /></th>
+                                <th><input type="checkbox" id="chk_role_owner" name="chk_role_owner" /></th>
+                                <th><input type="checkbox" id="chk_role_editor" name="chk_role_editor" /></th>
+                                <th><input type="checkbox" id="chk_role_contributor" name="chk_role_contributor" /></th>
+                                <th><input type="checkbox" id="chk_role_viewer" name="chk_role_viewer" /></th>
+                            </tr>
+                        </table>
+                        
+                    </div>
+                    <div><br /></div>
+                    <div>
+                        <input type = "submit" name="btn_save" id="btn_save" value="Save" />   
+                        <input type = "button" name="btn_cancel" id="btn_cancel" value="Cancel" onclick="cancel_update_user();" />   
+                    </div>
+                    
+                    
+                    
+                </form> 
+            </div>  
+        </div>
+    </div>
+
+</body>   
+<script>
+    
+
+    function cancel_update_user(){
+        document.location.href = "manage_users";
+    }
+    
+</script>
+</html>

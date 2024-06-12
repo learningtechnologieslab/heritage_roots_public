@@ -1,0 +1,15 @@
+{
+    "neo4j_dev":{
+        "uri":"bolt://localhost:7687",
+        "user":"neo4j",
+        "passwd":"admin123"
+    },
+    "neo4j_prod":{
+        "uri":"neo4j+s://53d33dd6.databases.neo4j.io",
+        "user" : "neo4j", 
+        "passwd": "lsBrWIfI0MLeNBazNvlu47kEb8ZQWf-z2HPqjpxBiuY"
+    },
+    "open_ai": {
+        "api_key" : "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"
+    }
+}

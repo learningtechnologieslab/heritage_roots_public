@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>3D Model Viewer</title>
+
+    <meta charset="utf-8">
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+    
+
+</head>
+<body>
+
+    
+    <model-viewer width="500px" height="500px" src="{{ url_for('static',filename='models/toucan.glb') }}" ar ar-modes="webxr scene-viewer quick-look" camera-controls tone-mapping="commerce" shadow-intensity="1">
+        <div class="progress-bar hide" slot="progress-bar">
+            <div class="update-bar"></div>
+        </div>
+        
+    </model-viewer>
+    
+    
+
+    
+
+</body>
+</html>
